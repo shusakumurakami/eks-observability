@@ -1,0 +1,17 @@
+# Development environment values for ADOT Container Insights Collector
+# Override these values with Terraform outputs
+
+aws:
+  region: ap-northeast-1
+  clusterName: myapp-dev-eks
+
+# IMPORTANT: Set these values using Terraform outputs before deploying:
+#
+# 1. Get Terraform outputs:
+#    cd infra/terraform/envs/dev/main
+#    terraform output container_insights_role_arn
+#
+# 2. Update the values below or pass them via --set during helm upgrade
+
+serviceAccount:
+  roleArn: "arn:aws:iam::404925354830:role/myapp-dev-container-insights-irsa"  # Set from 'terraform output container_insights_role_arn'

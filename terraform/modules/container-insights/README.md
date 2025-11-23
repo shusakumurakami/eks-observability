@@ -19,9 +19,9 @@ This module manages Container Insights infrastructure for EKS, providing CloudWa
 module "observability_core" {
   source = "../../modules/container-insights"
 
-  resource_name_prefix = "my-project-dev"
+  resource_name_prefix = "myapp-dev"
   region               = "ap-northeast-1"
-  eks_cluster_name     = "my-eks-cluster"
+  eks_cluster_name     = "myapp-dev-eks"
   environment          = "dev"
   oidc_provider_arn    = module.eks.oidc_provider_arn
 

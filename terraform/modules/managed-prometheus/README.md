@@ -21,7 +21,7 @@ This module manages Amazon Managed Prometheus (AMP) infrastructure for EKS, incl
 module "prometheus" {
   source = "../../modules/managed-prometheus"
 
-  resource_name_prefix = "my-project-dev"
+  resource_name_prefix = "myapp-dev"
   environment          = "dev"
   oidc_provider_arn    = module.eks.oidc_provider_arn
 

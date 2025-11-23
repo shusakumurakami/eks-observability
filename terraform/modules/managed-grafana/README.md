@@ -24,7 +24,7 @@ Terraform module for managing Amazon Managed Grafana (AMG) workspace with access
 module "grafana" {
   source = "../../modules/managed-grafana"
 
-  resource_name_prefix     = "my-project-dev"
+  resource_name_prefix     = "myapp-dev"
   region                   = "ap-northeast-1"
   environment              = "dev"
   authentication_providers = ["AWS_SSO"]
@@ -46,7 +46,7 @@ module "observability_prometheus" {
 module "grafana" {
   source = "../../modules/managed-grafana"
 
-  resource_name_prefix     = "my-project-dev"
+  resource_name_prefix     = "myapp-dev"
   region                   = "ap-northeast-1"
   environment              = "dev"
   authentication_providers = ["AWS_SSO"]
