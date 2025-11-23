@@ -17,7 +17,7 @@ This module manages Container Insights infrastructure for EKS, providing CloudWa
 
 ```hcl
 module "observability_core" {
-  source = "../../modules/observability-container-insights"
+  source = "../../modules/container-insights"
 
   resource_name_prefix = "my-project-dev"
   region               = "ap-northeast-1"
