@@ -52,7 +52,7 @@ The AMP workspace can be used as a data source for Grafana:
 
 ```hcl
 module "grafana" {
-  source = "../../modules/grafana"
+  source = "../../modules/managed-grafana"
 
   amp_workspace_id = module.prometheus.workspace_id
   # ... other config
