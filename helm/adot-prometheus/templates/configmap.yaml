@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.resourceNames.configMapName }}
+  namespace: {{ .Values.namespace.name }}
+data:
+  config.yaml: |
+    receivers:
+      prometheus:
+        config:
+          global:
+            scrape_interval: {{ .Values.config.scrapeInterval }}
+            scrape_timeout: {{ .Values.config.scrapeTimeout }}
+            external_labels:
+              cluster: {{ .Values.aws.clusterName }}
+              environment: {{ .Values.aws.environment }}
+          scrape_configs:
+            - job_name: 'kubernetes-pods'
+              kubernetes_sd_configs:
+                - role: pod
+                  namespaces:
+                    names:
+                      - {{ .Values.application.namespace }}
+              relabel_configs:
+                # Only scrape pods with prometheus.io/scrape: "true" annotation
+                - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+                  action: keep
+                  regex: true
+                # Read the port from prometheus.io/port annotation, default to pod port
+                - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port, __meta_kubernetes_pod_ip]
+                  action: replace
+                  target_label: __address__
+                  regex: ([^:]+);(.*)
+                  replacement: $$2:$$1
+                # Read the metrics path from prometheus.io/path annotation, default to /metrics
+                - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+                  action: replace
+                  target_label: __metrics_path__
+                  regex: (.+)
+                # Set job label to the app label value for better identification
+                - source_labels: [__meta_kubernetes_pod_label_app]
+                  action: replace
+                  target_label: job
+                # Preserve pod name, namespace, and container name as labels
+                - source_labels: [__meta_kubernetes_pod_name]
+                  action: replace
+                  target_label: pod
+                - source_labels: [__meta_kubernetes_namespace]
+                  action: replace
+                  target_label: namespace
+                - source_labels: [__meta_kubernetes_pod_container_name]
+                  action: replace
+                  target_label: container
+
+    processors:
+      batch:
+        timeout: 60s
+        send_batch_size: 8192
+      memory_limiter:
+        check_interval: 5s
+        limit_mib: 400
+        spike_limit_mib: 100
+      resource:
+        attributes:
+          - key: deployment.environment
+            value: {{ .Values.aws.environment }}
+            action: insert
+
+    exporters:
+      prometheusremotewrite:
+        endpoint: {{ .Values.amp.workspaceEndpoint }}api/v1/remote_write
+        auth:
+          authenticator: sigv4auth
+        resource_to_telemetry_conversion:
+          enabled: true
+      logging:
+        loglevel: info
+
+    extensions:
+      sigv4auth:
+        region: {{ .Values.aws.region }}
+        service: aps
+      health_check:
+        endpoint: :13133
+
+    service:
+      extensions: [sigv4auth, health_check]
+      pipelines:
+        metrics:
+          receivers: [prometheus]
+          processors: [memory_limiter, batch, resource]
+          exporters: [prometheusremotewrite, logging]

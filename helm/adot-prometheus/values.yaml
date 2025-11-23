@@ -1,0 +1,61 @@
+# Default values for adot-prometheus
+# These values can be overridden in values/values-{env}.yaml
+
+# AWS Configuration
+aws:
+  region: ap-northeast-1
+  clusterName: ""  # Required: EKS cluster name
+  environment: ""  # Required: Environment name (dev, staging, production)
+
+# Amazon Managed Prometheus
+amp:
+  workspaceEndpoint: ""  # Required: AMP workspace remote write endpoint (from Terraform output)
+
+# IRSA (IAM Roles for Service Accounts)
+serviceAccount:
+  name: adot-collector-prometheus
+  roleArn: ""  # Required: IAM role ARN for Prometheus collector (from Terraform output)
+
+# Namespace configuration
+namespace:
+  name: aws-otel-eks
+  create: true
+
+# Application configuration
+application:
+  namespace: myAppNamespace  # Namespace where your application runs
+
+# Resource naming
+# These names are customized to avoid conflicts with other ADOT collectors
+resourceNames:
+  configMapName: adot-collector-prometheus-config
+  deploymentName: adot-collector-prometheus
+  containerName: adot-collector-prometheus
+  appLabel: adot-collector-prometheus
+
+# Prometheus Collector configuration
+replicaCount: 2
+
+image:
+  repository: public.ecr.aws/aws-observability/aws-otel-collector
+  tag: v0.40.0
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+
+config:
+  scrapeInterval: 30s
+  scrapeTimeout: 10s
+
+securityContext:
+  runAsUser: 65534
+  runAsGroup: 65534
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true

@@ -1,0 +1,33 @@
+# Development environment values for ADOT Prometheus Collector
+# Override these values with Terraform outputs
+
+aws:
+  region: ap-northeast-1
+  clusterName: myapp-dev-eks
+  environment: dev
+
+# IMPORTANT: Set these values using Terraform outputs before deploying:
+#
+# 1. Get Terraform outputs:
+#    cd infra/terraform/envs/dev/main
+#    terraform output prometheus_workspace_endpoint
+#    terraform output adot_collector_role_arn
+#
+# 2. Update the values below or pass them via --set during helm upgrade
+
+amp:
+  workspaceEndpoint: "https://aps-workspaces.ap-northeast-1.amazonaws.com/workspaces/ws-xxxxxxxxxx"  # Set from 'terraform output prometheus_workspace_endpoint'
+
+serviceAccount:
+  name: adot-collector-prometheus
+  roleArn: "arn:aws:iam::000000000000:role/myapp-dev-prometheus-irsa"  # Set from 'terraform output adot_collector_role_arn'
+
+application:
+  namespace: myAppNamespace
+
+# Namespace already exists, don't create it
+namespace:
+  create: false
+
+# Use single replica to avoid duplicate scraping and out-of-order sample errors
+replicaCount: 1
