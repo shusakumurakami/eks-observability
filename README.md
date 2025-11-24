@@ -209,7 +209,3 @@ Monthly costs for a dev environment:
 ## Documentation
 
 For detailed information about architecture decisions and troubleshooting, see [CLAUDE.md](./CLAUDE.md).
-
-## License
-
-[Add your license here]
