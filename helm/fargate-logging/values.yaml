@@ -1,0 +1,40 @@
+# Default values for fargate-logging Helm Chart
+# This chart configures Fargate logging for the entire EKS cluster
+
+global:
+  clusterName: myapp-dev-eks  # Override in environment-specific values files
+  environment: development      # Override in environment-specific values files
+
+  aws:
+    region: ap-northeast-1  # Override in environment-specific values files
+
+# Logging configuration
+logging:
+  # Enable Fluent Bit process logs to CloudWatch (set to true for debugging)
+  fluentBitLogsEnabled: false
+
+  # Log retention days (can be overridden per namespace in namespaces section)
+  defaultRetentionDays: 7
+
+  # Namespace-specific configurations
+  namespaces:
+    # Infrastructure namespaces
+    infrastructure:
+      - name: default
+        retentionDays: 7
+      - name: kube-system
+        retentionDays: 7
+      - name: external-secrets
+        retentionDays: 7
+
+    # Application namespaces
+    application:
+      - name: myapp
+        retentionDays: 30
+
+    # Monitoring namespaces
+    monitoring:
+      - name: aws-otel-eks
+        retentionDays: 7
+      - name: aws-observability
+        retentionDays: 7

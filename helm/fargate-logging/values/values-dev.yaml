@@ -1,0 +1,31 @@
+# Development environment values for fargate-logging
+
+global:
+  clusterName: myapp-dev-eks
+  environment: development
+
+  aws:
+    region: ap-northeast-1
+
+logging:
+  fluentBitLogsEnabled: false
+  defaultRetentionDays: 7
+
+  namespaces:
+    infrastructure:
+      - name: default
+        retentionDays: 7
+      - name: kube-system
+        retentionDays: 7
+      - name: external-secrets
+        retentionDays: 7
+
+    application:
+      - name: myapp
+        retentionDays: 30
+
+    monitoring:
+      - name: aws-otel-eks
+        retentionDays: 7
+      - name: aws-observability
+        retentionDays: 7

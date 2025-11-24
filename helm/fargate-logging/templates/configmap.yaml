@@ -1,0 +1,84 @@
+# reference: https://docs.aws.amazon.com/eks/latest/userguide/fargate-logging.html
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-logging
+  namespace: aws-observability
+data:
+  # Set to true to ship Fluent Bit process logs to CloudWatch
+  flb_log_cw: {{ .Values.logging.fluentBitLogsEnabled | quote }}
+
+  filters.conf: |
+    [FILTER]
+        Name parser
+        Match *
+        Key_name log
+        Parser cri
+        Reserve_Data true
+        Preserve_Key true
+
+    [FILTER]
+        Name kubernetes
+        Match *
+        Merge_Log On
+        Keep_Log Off
+        K8S-Logging.Parser On
+        K8S-Logging.Exclude Off
+        Annotations Off
+        Labels On
+
+    [FILTER]
+        Name modify
+        Match *
+        Add cluster_name {{ .Values.global.clusterName }}
+        Add environment {{ .Values.global.environment }}
+
+  output.conf: |
+    {{- range .Values.logging.namespaces.infrastructure }}
+    # Infrastructure: {{ .name }}
+    [OUTPUT]
+        Name cloudwatch_logs
+        Match *{{ .name }}*
+        region {{ $.Values.global.aws.region }}
+        log_group_name /aws/eks/{{ $.Values.global.clusterName }}/infrastructure/{{ .name }}
+        log_stream_prefix $(kubernetes['pod_name'])-
+        log_retention_days {{ .retentionDays | default $.Values.logging.defaultRetentionDays }}
+        auto_create_group true
+        log_format json_lines
+    {{- end }}
+
+    {{- range .Values.logging.namespaces.application }}
+    # Application: {{ .name }}
+    [OUTPUT]
+        Name cloudwatch_logs
+        Match *{{ .name }}*
+        region {{ $.Values.global.aws.region }}
+        log_group_name /aws/eks/{{ $.Values.global.clusterName }}/application/{{ .name }}
+        log_stream_prefix $(kubernetes['pod_name'])-
+        log_retention_days {{ .retentionDays | default $.Values.logging.defaultRetentionDays }}
+        auto_create_group true
+        log_format json_lines
+    {{- end }}
+
+    {{- range .Values.logging.namespaces.monitoring }}
+    # Monitoring: {{ .name }}
+    [OUTPUT]
+        Name cloudwatch_logs
+        Match *{{ .name }}*
+        region {{ $.Values.global.aws.region }}
+        log_group_name /aws/eks/{{ $.Values.global.clusterName }}/monitoring/{{ .name }}
+        log_stream_prefix $(kubernetes['pod_name'])-
+        log_retention_days {{ .retentionDays | default $.Values.logging.defaultRetentionDays }}
+        auto_create_group true
+        log_format json_lines
+    {{- end }}
+
+  parsers.conf: |
+    [PARSER]
+        Name cri
+        Format Regex
+        Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<message>.*)$
+        Time_Key time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z

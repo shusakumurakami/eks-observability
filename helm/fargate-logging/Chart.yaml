@@ -1,0 +1,12 @@
+apiVersion: v2
+name: fargate-logging
+description: AWS Fargate logging configuration for EKS using Fluent Bit
+version: 0.1.0
+appVersion: "1.0"
+keywords:
+  - aws
+  - eks
+  - fargate
+  - logging
+  - fluent-bit
+  - cloudwatch
