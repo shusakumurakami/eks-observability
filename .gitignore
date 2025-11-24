@@ -1,0 +1,168 @@
+# General
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.envrc
+.env
+
+# Terraform
+## Terraform state files
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+## Crash log files
+crash.log
+crash.*.log
+
+## Exclude all .tfvars files except example files
+*.tfvars
+!example.tfvars
+!values-*.tfvars
+
+## Ignore override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+## CLI configuration files
+.terraformrc
+terraform.rc
+
+## Terraform directories
+.terraform/
+
+## Terraform plan files
+*.tfplan
+terraform.plan
+
+# Helm
+## Helm chart dependencies
+helm/*/charts/
+helm/*/.helmignore
+
+## Helm package archives
+*.tgz
+
+## Helm dependency lock files (may commit in some cases, but excluded for reference repo)
+helm/*/Chart.lock
+
+## Helm temporary files
+helm/*/tmpcharts/
+
+## Environment-specific values (may contain sensitive information)
+# helm/*/values-prod.yaml
+# helm/*/values-staging.yaml
+# Note: values-*.yaml are committed since this is a reference repository
+
+# Kubernetes
+## kubectl configuration
+kubeconfig
+kubeconfig.*
+*.kubeconfig
+
+## kustomize
+kustomization.yaml.bak
+
+# AWS
+## AWS credentials (NEVER commit these)
+.aws/
+credentials
+*.pem
+*.key
+
+## AWS CLI configuration
+.awsconfig
+
+# Secrets and sensitive data
+secrets/
+*.secret
+*.secrets.yaml
+.secrets/
+*.env.local
+*.env.production
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS-specific
+Thumbs.db
+Desktop.ini
+
+# Python (for pre-commit hooks)
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.Python
+venv/
+env/
+ENV/
+
+# Node.js (if using npm for markdown link checking)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# TFLint
+.tflint.d/
+.tflint.hcl.bak
+
+# Checkov
+.checkov.yaml
+.checkov.yml
+
+# Git hooks
+.git/hooks/
+
+# Test files
+test-results/
+*.test
+*.spec
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Archive files
+*.zip
+*.tar.gz
+*.tar
+*.gz
+*.rar
+
+# Documentation builds
+docs/_build/
+site/
+
+# IDE specific
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+*.iml
+
+# Local CI/CD testing
+.github/workflows/local-*
+
+# Terraform documentation generation
+.terraform-docs.yml
+.terraform-docs.yaml

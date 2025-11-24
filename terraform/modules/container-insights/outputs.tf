@@ -1,6 +1,6 @@
 output "container_insights_role_arn" {
   description = "IAM role ARN for Container Insights"
-  value       = module.irsa_container_insights.iam_role_arn
+  value       = module.irsa_container_insights.arn
 }
 
 output "container_insights_service_account" {

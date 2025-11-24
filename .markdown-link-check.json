@@ -1,0 +1,37 @@
+{
+  "ignorePatterns": [
+    {
+      "comment": "Skip Claude Code related links",
+      "pattern": "^https://claude.ai"
+    },
+    {
+      "comment": "Skip local filesystem paths",
+      "pattern": "^file://"
+    },
+    {
+      "comment": "Skip placeholder URLs",
+      "pattern": "^https://example.com"
+    }
+  ],
+  "replacementPatterns": [
+    {
+      "comment": "Convert GitHub relative paths to absolute paths",
+      "pattern": "^/",
+      "replacement": "{{BASEURL}}/"
+    }
+  ],
+  "httpHeaders": [
+    {
+      "comment": "Mitigate GitHub API rate limiting",
+      "urls": ["https://github.com", "https://raw.githubusercontent.com"],
+      "headers": {
+        "Accept": "application/vnd.github.v3+json"
+      }
+    }
+  ],
+  "timeout": "10s",
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "5s",
+  "aliveStatusCodes": [200, 206, 301, 302, 307, 308, 403, 429]
+}

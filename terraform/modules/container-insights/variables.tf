@@ -29,8 +29,3 @@ variable "eks_cluster_name" {
   description = "EKS cluster name"
   type        = string
 }
-
-variable "environment" {
-  description = "Environment name (dev, staging, production)"
-  type        = string
-}

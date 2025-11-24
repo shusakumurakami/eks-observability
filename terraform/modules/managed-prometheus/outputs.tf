@@ -15,7 +15,7 @@ output "workspace_endpoint" {
 
 output "adot_collector_role_arn" {
   description = "IAM role ARN for ADOT Collector (Prometheus)"
-  value       = module.irsa_adot_collector.iam_role_arn
+  value       = module.irsa_adot_collector.arn
 }
 
 output "adot_collector_service_account" {

@@ -69,12 +69,12 @@ output "fargate_profiles" {
 output "fargate_log_groups" {
   description = "Map of CloudWatch log groups for Fargate profiles"
   value = {
-    infrastructure_default        = aws_cloudwatch_log_group.fargate_infrastructure_default.name
-    infrastructure_kube_system    = aws_cloudwatch_log_group.fargate_infrastructure_kube_system.name
+    infrastructure_default          = aws_cloudwatch_log_group.fargate_infrastructure_default.name
+    infrastructure_kube_system      = aws_cloudwatch_log_group.fargate_infrastructure_kube_system.name
     infrastructure_external_secrets = aws_cloudwatch_log_group.fargate_infrastructure_external_secrets.name
-    application                   = aws_cloudwatch_log_group.fargate_application.name
-    monitoring_aws_otel_eks       = aws_cloudwatch_log_group.fargate_monitoring_aws_otel_eks.name
-    monitoring_aws_observability  = aws_cloudwatch_log_group.fargate_monitoring_aws_observability.name
+    application                     = aws_cloudwatch_log_group.fargate_application.name
+    monitoring_aws_otel_eks         = aws_cloudwatch_log_group.fargate_monitoring_aws_otel_eks.name
+    monitoring_aws_observability    = aws_cloudwatch_log_group.fargate_monitoring_aws_observability.name
   }
 }
 

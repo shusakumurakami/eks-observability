@@ -1,0 +1,65 @@
+# Pre-commit hooks for local development
+# Install: pip install pre-commit && pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  # Terraform formatting and validation
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.88.4
+    hooks:
+      - id: terraform_fmt
+        name: Terraform format
+        description: Rewrites Terraform to canonical format
+
+      - id: terraform_validate
+        name: Terraform validate
+        description: Validates all Terraform configuration files
+        args:
+          - --hook-config=--retry-once-with-cleanup=true
+
+      - id: terraform_tflint
+        name: Terraform lint (tflint)
+        description: Validates Terraform with tflint
+        args:
+          - --args=--config=__GIT_WORKING_DIR__/.tflint.hcl
+
+  # YAML formatting and validation
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-yaml
+        name: Check YAML syntax
+        args: [--unsafe]  # Allow {{}} in Helm charts
+
+      - id: end-of-file-fixer
+        name: Fix end of files
+        exclude: \.svg$
+
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+
+      - id: check-added-large-files
+        name: Check for large files
+        args: [--maxkb=1000]
+
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+
+      - id: detect-private-key
+        name: Detect private keys
+
+  # Markdown formatting
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+        files: \.(md|markdown)$
+
+  # Helm chart validation
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.23
+    hooks:
+      - id: helmlint
+        name: Helm lint
+        files: ^helm/.*/

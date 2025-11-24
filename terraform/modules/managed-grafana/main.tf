@@ -1,9 +1,4 @@
 #--------------------------------------------------
-# Data Sources
-#--------------------------------------------------
-data "aws_caller_identity" "current" {}
-
-#--------------------------------------------------
 # Wait for IAM propagation
 #--------------------------------------------------
 # IAM resources are eventually consistent and may not be immediately available

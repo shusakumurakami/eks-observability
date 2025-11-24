@@ -1,0 +1,87 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Renovate configuration for EKS observability reference repository",
+  "extends": [
+    "config:recommended"
+  ],
+  "timezone": "Asia/Tokyo",
+  "schedule": [
+    "every weekend"
+  ],
+  "labels": [
+    "dependencies",
+    "automated"
+  ],
+  "assignees": [],
+  "reviewers": [],
+  "prConcurrentLimit": 3,
+  "prCreation": "not-pending",
+  "prHourlyLimit": 2,
+  "rebaseWhen": "conflicted",
+  "semanticCommits": "enabled",
+  "commitMessagePrefix": "chore(deps):",
+  "packageRules": [
+    {
+      "description": "Terraform provider updates",
+      "matchDatasources": ["terraform-provider"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "terraform providers",
+      "automerge": false,
+      "schedule": ["every weekend"]
+    },
+    {
+      "description": "Terraform module updates",
+      "matchDatasources": ["terraform-module"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "terraform modules",
+      "automerge": false
+    },
+    {
+      "description": "Helm chart updates",
+      "matchDatasources": ["helm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "helm charts",
+      "automerge": false
+    },
+    {
+      "description": "Docker image updates (ADOT collector)",
+      "matchDatasources": ["docker"],
+      "matchPackagePatterns": ["amazon/aws-otel-collector"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": false,
+      "schedule": ["every weekend"]
+    },
+    {
+      "description": "GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "github actions",
+      "automerge": false,
+      "pinDigests": true
+    },
+    {
+      "description": "Major updates - create separate PRs",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major-update"],
+      "reviewers": [],
+      "prPriority": 10
+    }
+  ],
+  "terraform": {
+    "enabled": true
+  },
+  "helm-values": {
+    "enabled": true,
+    "fileMatch": ["helm/.*/values.*\\.yaml$"]
+  },
+  "docker": {
+    "enabled": true,
+    "fileMatch": ["helm/.*/values.*\\.yaml$"]
+  },
+  "ignoreDeps": [],
+  "vulnerabilityAlerts": {
+    "enabled": false,
+    "labels": ["security"]
+  }
+}

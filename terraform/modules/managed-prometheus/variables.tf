@@ -19,8 +19,3 @@ variable "adot_collector_service_account" {
   type        = string
   default     = "adot-collector-prometheus"
 }
-
-variable "environment" {
-  description = "Environment name (dev, staging, production)"
-  type        = string
-}

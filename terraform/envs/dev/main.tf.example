@@ -1,0 +1,66 @@
+# Example main configuration for dev environment
+# This demonstrates how to use the modules with default_tags from provider
+
+# Variables (define in variables.tf)
+variable "region" {
+  description = "AWS region"
+  type        = string
+  default     = "us-west-2"
+}
+
+variable "cluster_name" {
+  description = "EKS cluster name"
+  type        = string
+  default     = "eks-observability-dev"
+}
+
+# EKS Module
+module "eks" {
+  source = "../../modules/eks"
+
+  resource_name_prefix = "eks-obs-dev"
+  region               = var.region
+  environment          = "dev"
+
+  cluster_name    = var.cluster_name
+  cluster_version = "1.31"
+
+  vpc_id             = "vpc-xxxxxxxxx"  # Replace with your VPC ID
+  private_subnet_ids = [
+    "subnet-xxxxxxxxx",  # Replace with your subnet IDs
+    "subnet-yyyyyyyyy",
+  ]
+
+  application_name = "myapp"
+}
+
+# Container Insights Module
+module "container_insights" {
+  source = "../../modules/container-insights"
+
+  resource_name_prefix = "eks-obs-dev"
+  region               = var.region
+
+  eks_cluster_name  = module.eks.cluster_name
+  oidc_provider_arn = module.eks.oidc_provider_arn
+}
+
+# Managed Prometheus Module (Optional)
+module "managed_prometheus" {
+  source = "../../modules/managed-prometheus"
+
+  resource_name_prefix = "eks-obs-dev"
+
+  oidc_provider_arn = module.eks.oidc_provider_arn
+}
+
+# Managed Grafana Module (Optional)
+module "managed_grafana" {
+  source = "../../modules/managed-grafana"
+
+  resource_name_prefix = "eks-obs-dev"
+
+  workspace_name                = "eks-obs-dev"
+  prometheus_workspace_arns     = [module.managed_prometheus.workspace_arn]
+  cloudwatch_log_group_patterns = ["/aws/containerinsights/${var.cluster_name}/*"]
+}

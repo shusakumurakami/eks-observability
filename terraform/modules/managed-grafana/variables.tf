@@ -3,22 +3,6 @@ variable "resource_name_prefix" {
   type        = string
 }
 
-variable "region" {
-  description = "AWS region"
-  type        = string
-}
-
-variable "amp_workspace_id" {
-  description = "Amazon Managed Prometheus workspace ID (optional - Grafana can discover AMP via IAM permissions)"
-  type        = string
-  default     = ""
-}
-
-variable "environment" {
-  description = "Environment name (dev, staging, production)"
-  type        = string
-}
-
 variable "authentication_providers" {
   description = "List of authentication providers for Grafana workspace (AWS_SSO, SAML)"
   type        = list(string)
